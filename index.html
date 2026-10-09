@@ -1,0 +1,318 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>IB 真题库 · Past Paper Library</title>
+<style>
+:root{--bg:#0f1216;--panel:#161b22;--panel2:#1c232c;--line:#283040;--tx:#e6edf3;--mut:#8b98a9;--acc:#e4002b;--acc2:#3b82f6;--ok:#22c55e}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{background:var(--bg);color:var(--tx);font:14px/1.5 -apple-system,"PingFang SC","Microsoft YaHei",Segoe UI,sans-serif}
+a{color:var(--acc2);text-decoration:none}
+header{position:sticky;top:0;z-index:20;background:linear-gradient(180deg,#11161d,#0f1216);border-bottom:1px solid var(--line);padding:12px 18px;display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+header h1{margin:0;font-size:18px;letter-spacing:.3px}
+header .sub{color:var(--mut);font-size:12px}
+#q{flex:1;min-width:220px;background:var(--panel2);border:1px solid var(--line);color:var(--tx);border-radius:22px;padding:9px 16px;font-size:14px;outline:none}
+#q:focus{border-color:var(--acc2)}
+.app{display:flex;height:calc(100% - 62px)}
+aside{width:250px;min-width:250px;border-right:1px solid var(--line);overflow:auto;background:var(--panel)}
+aside .h{padding:10px 14px;color:var(--mut);font-size:12px;position:sticky;top:0;background:var(--panel);border-bottom:1px solid var(--line)}
+.srow{padding:8px 14px;cursor:pointer;display:flex;justify-content:space-between;gap:8px;border-bottom:1px solid #12171d}
+.srow:hover{background:var(--panel2)}
+.srow.on{background:#20304a;border-left:3px solid var(--acc2)}
+.srow .c{color:var(--mut);font-size:12px}
+main{flex:1;overflow:auto;padding:16px 20px}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px;cursor:pointer}
+.card:hover{border-color:var(--acc2)}
+.card b{font-size:15px}
+.card .m{color:var(--mut);font-size:12px;margin-top:4px}
+.bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+.bar select,.bar button{background:var(--panel2);color:var(--tx);border:1px solid var(--line);border-radius:8px;padding:6px 10px;font-size:13px}
+.bar button{cursor:pointer}
+.bar button:hover{border-color:var(--acc2)}
+table{width:100%;border-collapse:collapse;background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid #12171d;font-size:13px}
+th{background:var(--panel2);color:var(--mut);font-weight:600;position:sticky;top:0}
+tr:hover td{background:var(--panel2)}
+.tag{display:inline-block;padding:1px 7px;border-radius:6px;font-size:11px;border:1px solid var(--line);color:var(--mut)}
+.tag.ms{color:#f5c451;border-color:#5a4a1e;background:#2a2210}
+.tag.paper{color:#7fd1a8;border-color:#1e4a35;background:#0f2a1e}
+.tag.rep{color:#c58af9;border-color:#43265c;background:#221030}
+.dl{color:var(--tx);background:transparent;font-family:inherit;border:1px solid var(--line);border-radius:8px;padding:3px 10px;font-size:12px;white-space:nowrap;cursor:pointer}
+.dl:hover{background:var(--acc);border-color:var(--acc);color:#fff}
+.hint{color:var(--mut);margin:6px 0 14px}
+.ses{color:var(--mut)}
+.hl{color:var(--tx);font-weight:600}
+mark{background:#3b2a00;color:#ffd76a;padding:0 2px;border-radius:3px}
+.qrmask{position:fixed;inset:0;background:rgba(0,0,0,.72);display:none;align-items:center;justify-content:center;z-index:100}
+.qrmask.on{display:flex}
+.qrcard{background:#fff;color:#111;border-radius:16px;padding:18px 20px 16px;text-align:center;max-width:min(92vw,430px);box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.qrcard h3{margin:0 0 12px;font-size:14px;color:#111;line-height:1.4}
+.qrcard img{display:block;margin:0 auto;background:#fff}
+.qrcard .t{font-size:12px;color:#555;margin-top:10px;word-break:break-all}
+.qrcard button{margin-top:14px;background:#e4002b;color:#fff;border:0;border-radius:9px;padding:9px 20px;font-size:14px;cursor:pointer}
+.qrcard a{display:inline-block;margin-top:10px;color:#0645ad;font-size:12px}
+.qrsheet{display:grid;grid-template-columns:repeat(auto-fill,minmax(158px,1fr));gap:12px}
+.qitem{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px;text-align:center}
+.qitem .qt{font-size:11px;color:var(--tx);font-weight:600;margin-bottom:6px;line-height:1.35}
+.qitem .qi img{background:#fff;padding:5px;border-radius:8px}
+.qitem .qn{font-size:9px;color:var(--mut);margin-top:6px;word-break:break-all;line-height:1.3}
+@media print{header,aside,.bar,footer,.hint{display:none!important}.app{display:block}main{overflow:visible;padding:0}.qitem{break-inside:avoid;border-color:#ccc}.qrsheet{grid-template-columns:repeat(4,1fr)}body{background:#fff;color:#000}}
+footer{color:var(--mut);font-size:12px;padding:20px 4px}
+</style>
+</head>
+<body>
+<header>
+  <h1>IB 真题库</h1>
+  <span class="sub">共 <b id="tot">9087</b> 份 · 2020–2026 · 全学科 / 全 TZ / HL·SL · 来源 papers.xtremepape.rs · 本地离线</span>
+  <input id="q" placeholder="搜索：科目 / HL / 2024 / paper 1 / markscheme …">
+</header>
+<div class="app">
+  <aside><div class="h">科目（点击浏览）</div><div id="subs"></div></aside>
+  <main id="main"></main>
+</div>
+<div id="qrmask" class="qrmask"><div class="qrcard">
+  <h3 id="qrtitle">扫码打开评分标准</h3>
+  <div id="qrimg"></div>
+  <div class="t" id="qrtxt"></div>
+  <div><a id="qrlink" href="#" target="_blank" rel="noopener">直接打开</a></div>
+  <button id="qrclose">关闭</button>
+</div></div>
+<script src="vendor/qrcode.js"></script>
+<script src="data.js"></script>
+<script>
+const P = window.PAPERS || [];
+const MON = {may:5,november:11,nov:11,october:10,oct:10,march:3,february:2};
+function sesKey(s){const m=/([A-Za-z]+)?\s*(\d{4})/.exec(s||"");if(!m)return 0;const y=+m[2]||0;const mo=MON[(m[1]||"").toLowerCase()]||(y===0?0:6);return y*100+mo;}
+const bySub = {};
+for(const r of P){ (bySub[r.s] ||= []).push(r); }
+for(const k in bySub) bySub[k].sort((a,b)=> sesKey(b.ses)-sesKey(a.ses) || (a.l||"").localeCompare(b.l||"") || (a.pp||"").localeCompare(b.pp||"") || (a.k||"").localeCompare(b.k||""));
+const subList = Object.keys(bySub).sort((a,b)=> bySub[b].length-bySub[a].length || a.localeCompare(b,"zh"));
+const E = id => document.getElementById(id);
+const esc = s => (s||"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+// ===== 扫码出 markscheme =====
+const MS1={},MS2={},MS3={};
+for(const r of P){ if(r.k==="markscheme"){
+  const a=[r.s,r.ses,r.l,r.pp,r.tz].join("|"),b=[r.s,r.ses,r.l,r.pp].join("|"),c=[r.s,r.ses,r.pp].join("|");
+  if(!MS1[a])MS1[a]=r; if(!MS2[b])MS2[b]=r; if(!MS3[c])MS3[c]=r;
+}}
+function msFor(r){
+  if(r.k==="markscheme")return r;
+  return MS1[[r.s,r.ses,r.l,r.pp,r.tz].join("|")] || MS2[[r.s,r.ses,r.l,r.pp].join("|")] || MS3[[r.s,r.ses,r.pp].join("|")] || null;
+}
+function qrImg(txt,cell){ try{ const q=qrcode(0,"M"); q.addData(txt); q.make(); return q.createImgTag(cell||4,4); }catch(e){ return '<div style="color:#c00;font-size:11px">QR 生成失败</div>'; } }
+function showQR(r){
+  const ms=msFor(r);
+  E("qrtitle").textContent = ms ? ("扫码打开评分标准："+r.s+" · "+r.ses+" · "+(r.l||"")+(r.pp?(" · "+r.pp):"")) : "这份卷在库里没有对应评分标准";
+  if(!ms){ E("qrimg").innerHTML=""; E("qrtxt").textContent=r.n||""; E("qrlink").style.display="none"; }
+  else { E("qrimg").innerHTML=qrImg(ms.u,5); E("qrtxt").textContent=ms.n; E("qrlink").href=ms.u; E("qrlink").style.display="inline-block"; }
+  E("qrmask").classList.add("on");
+}
+let CUR=[];
+function openQrSheet(rows,title){
+  const rich=rows.filter(r=>r.k!=="markscheme");
+  const nm={paper:"试卷",report:"考官报告",specimen:"样卷"};
+  E("main").innerHTML='<h2 style="margin:0 0 6px">'+esc(title)+' · 二维码小抄</h2>'
+    +'<div class="hint">共 '+rich.length+' 张（可打印）——扫每张图上的码 → 直接跳到该卷的评分标准</div>'
+    +'<div class="bar"><button id="qback">返回列表</button><button id="qprint">打印</button></div>'
+    +'<div class="qrsheet">'+rich.map(r=>{const ms=msFor(r);
+      return '<div class="qitem"><div class="qt">'+esc(r.s)+'<br>'+(r.tz?esc(r.tz)+" · ":"")+esc(r.ses)+(r.l?" · "+esc(r.l):"")+(r.pp?" · "+esc(r.pp):"")+'</div><div class="qi">'+(ms?qrImg(ms.u,3):'<span class="tag">无 MS</span>')+'</div><div class="qn">'+esc(r.n)+'</div></div>';}).join("")+'</div>'
+    +'<footer>来源 papers.xtremepape.rs · 本地离线</footer>';
+  E("qback").onclick=()=>open(title);
+  E("qprint").onclick=()=>window.print();
+  window.scrollTo(0,0);
+}
+
+function cardView(){
+  E("main").innerHTML = '<div class="hint">选一个科目开始。数据来自 xtremepape.rs 的 IB 镜像（2020–2026），含试卷 + 评分标准，全 TZ、HL/SL。</div>'
+   + '<div class="cards">' + subList.slice(0,400).map(s=>
+     `<div class="card" data-s="${esc(s)}"><b>${esc(s)}</b><div class="m">${bySub[s].length} 份 · ${[...new Set(bySub[s].map(r=>r.ses))].length} 个考季</div></div>`).join("") + '</div>';
+  E("main").querySelectorAll(".card").forEach(c=>c.onclick=()=>open(c.dataset.s));
+  document.querySelectorAll(".srow").forEach(r=>r.classList.toggle("on",false));
+}
+function uniq(arr){return [...new Set(arr)];}
+function open(s){
+  if(s) location.hash = encodeURIComponent(s);
+  document.querySelectorAll(".srow").forEach(r=>r.classList.toggle("on", r.dataset.s===s));
+  const rows = bySub[s]||[];
+  const lv = uniq(rows.map(r=>r.l).filter(Boolean)).sort();
+  const pp = uniq(rows.map(r=>r.pp).filter(Boolean)).sort();
+  const ks = uniq(rows.map(r=>r.k));
+  const se = uniq(rows.map(r=>r.ses)).sort((a,b)=>sesKey(b)-sesKey(a));
+  const opt=(arr,f)=>['<option value="">全部</option>'].concat(arr.map(v=>`<option>${esc(v)}</option>`)).join("");
+  E("main").innerHTML =
+   `<h2 style="margin:0 0 4px">${esc(s)}</h2><div class="hint">${rows.length} 份</div>
+    <div class="bar">
+      <select id="f1">${opt(lv)}</select>
+      <select id="f2">${opt(pp)}</select>
+      <select id="f3">${opt(ks.map(k=>k))}</select>
+      <select id="f4">${opt(se)}</select>
+      <button id="cl">清除筛选</button>
+      <button id="rd">随机一套</button>
+      <button id="qs">二维码小抄</button>
+    </div>
+    <div id="tbl"></div>`;
+  const draw=()=>{
+    const f1=E("f1").value,f2=E("f2").value,f3=E("f3").value,f4=E("f4").value;
+    const rs=rows.filter(r=>(!f1||r.l===f1)&&(!f2||r.pp===f2)&&(!f3||r.k===f3)&&(!f4||r.ses===f4));
+    CUR=rs;
+    const kName={paper:"试卷",markscheme:"评分标准",report:"考官报告",specimen:"样卷"};
+    E("tbl").innerHTML = `<div class="hint">显示 ${rs.length} 份</div><table><thead><tr><th>考季</th><th>层级</th><th>卷</th><th>TZ</th><th>类型</th><th>文件</th><th></th></tr></thead><tbody>`
+      + rs.map((r,i)=>`<tr><td class="ses">${esc(r.ses)}</td><td class="hl">${esc(r.l)}</td><td>${esc(r.pp)}</td><td>${esc(r.tz)}</td><td><span class="tag ${r.k[0]}">${kName[r.k]||r.k}</span></td><td style="color:var(--mut);max-width:380px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${esc(r.n)}">${esc(r.n)}</td><td style="white-space:nowrap"><a class="dl" href="${esc(r.u)}" target="_blank" rel="noopener">下载</a> ${msFor(r)?`<button class="dl q" data-i="${i}">MS 码</button>`:`<span class="tag">无 MS</span>`}</td></tr>`).join("")
+      + `</tbody></table>`;
+    E("tbl").querySelectorAll("button.q").forEach(b=>b.onclick=()=>showQR(CUR[+b.dataset.i]));
+  };
+  ["f1","f2","f3","f4"].forEach(i=>E(i).onchange=draw);
+  E("cl").onclick=()=>{["f1","f2","f3","f4"].forEach(i=>E(i).value="");draw();};
+  E("qs").onclick=()=>openQrSheet(CUR,s);
+  E("rd").onclick=()=>{const r=rows[Math.floor(Math.random()*rows.length)];window.open(r.u,"_blank");};
+  draw();
+}
+function buildSubs(){
+  E("subs").innerHTML = subList.map(s=>`<div class="srow" data-s="${esc(s)}"><span>${esc(s)}</span><span class="c">${bySub[s].length}</span></div>`).join("");
+  document.querySelectorAll(".srow").forEach(r=>r.onclick=()=>open(r.dataset.s));
+}
+let tmr=null;
+E("q").oninput = () => { clearTimeout(tmr); tmr=setTimeout(search, 180); };
+function search(){
+  const q=E("q").value.trim().toLowerCase();
+  if(!q){cardView();return;}
+  document.querySelectorAll(".srow").forEach(r=>r.classList.remove("on"));
+  const hits=P.filter(r=>(r.s+" "+r.n+" "+r.l+" "+r.pp+" "+r.tz+" "+r.ses+" "+r.k).toLowerCase().includes(q));
+  const cap=1200;
+  const kName={paper:"试卷",markscheme:"评分标准",report:"考官报告",specimen:"样卷"};
+  const mk=()=>kName[Object.keys(kName).find(k=>k.startsWith(hits[i].k[0]))];
+  E("main").innerHTML = `<h2 style="margin:0 0 4px">搜索 “${esc(q)}”</h2><div class="hint">命中 ${hits.length} 份${hits.length>cap?`（只显示前 ${cap}）`:``}</div>
+   <table><thead><tr><th>科目</th><th>考季</th><th>层级</th><th>卷</th><th>类型</th><th>文件</th><th></th></tr></thead><tbody>`
+   + hits.slice(0,cap).map((r,i)=>`<tr><td>${esc(r.s)}</td><td class="ses">${esc(r.ses)}</td><td class="hl">${esc(r.l)}</td><td>${esc(r.pp)}</td><td><span class="tag ${r.k[0]}">${r.k==='markscheme'?'评分标准':r.k==='paper'?'试卷':r.k}</span></td><td style="color:var(--mut);max-width:360px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${esc(r.n)}">${esc(r.n)}</td><td><a class="dl" href="${esc(r.u)}" target="_blank" rel="noopener">下载</a></td></tr>`).join("")
+   + `</tbody></table><footer>共 ${hits.length} 条命中。</footer>`;
+}
+E("qrclose").onclick=()=>E("qrmask").classList.remove("on");
+E("qrmask").onclick=e=>{ if(e.target.id==="qrmask") E("qrmask").classList.remove("on"); };
+buildSubs();
+const _h = decodeURIComponent(location.hash.slice(1));
+const _qp = new URLSearchParams(location.search).get("qr");
+if(_qp && bySub[_qp]) openQrSheet(bySub[_qp], _qp);
+else if(_h && bySub[_h]) open(_h); else cardView();
+E("tot").textContent = P.length.toLocaleString();
+</script>
+<!-- ===== 一号机加：中/EN/日本語 三语 + 手机端适配 · 2026-10-10 ===== -->
+<style>
+#langbar{position:fixed;top:8px;right:10px;z-index:90;display:flex;gap:3px;background:#0b0d12e6;border:1px solid #2a2f3a;border-radius:999px;padding:3px}
+#langbar button{background:none;border:0;color:#9aa4b2;font:600 12px/1 -apple-system,system-ui,sans-serif;padding:7px 10px;border-radius:999px;cursor:pointer}
+#langbar button.on{background:#2b6cff;color:#fff}
+#menubtn{display:none;background:#1b2029;color:#eef1f5;border:1px solid #2a2f3a;border-radius:9px;font:16px/1 system-ui,sans-serif;padding:9px 11px;margin:0 8px 0 0;cursor:pointer}
+#scrim{position:fixed;inset:0;background:#000b;z-index:70;display:none}
+#scrim.on{display:block}
+.tw{overflow-x:auto;-webkit-overflow-scrolling:touch}
+@media (max-width:900px){
+ html,body{overflow-x:hidden}
+ header{flex-wrap:wrap;gap:6px;padding:44px 12px 8px}
+ header h1{font-size:17px;line-height:1.3}
+ .sub{display:none}
+ aside{position:fixed!important;top:0;bottom:0;left:0;width:84%!important;max-width:360px;z-index:75;transform:translateX(-103%);transition:transform .2s ease;overflow:auto;background:#0d1016;box-shadow:0 0 40px #000c}
+ aside.open{transform:none}
+ main{padding:10px 10px 100px!important}
+ body{padding-bottom:24px}
+ table{font-size:11.5px;width:100%}
+ th,td{padding:4px 2px;white-space:nowrap}
+ th:nth-child(6),td:nth-child(6){display:none}
+ td:first-child{white-space:normal;word-break:break-word;max-width:30vw}
+ td:last-child{white-space:normal}
+ #q{flex:1 1 100%!important}
+ #menubtn{display:inline-block}
+}
+</style>
+<script>
+(function(){
+var LS='ibpp_lang',li=0;
+try{var v=localStorage.getItem(LS);if(v!==null)li=+v;else li=/^ja/i.test(navigator.language)?2:(/^zh/i.test(navigator.language)?0:1);}catch(e){}
+if(!(li>=0&&li<=2))li=0;
+var D={
+'IB 真题库':['IB Past Papers','IB 過去問ライブラリ'],
+'科目（点击浏览）':['Subjects (tap to browse)','科目（タップで開く）'],
+'关闭':['Close','閉じる'],
+'直接打开':['Open link','開く'],
+'返回列表':['Back to list','リストに戻る'],
+'打印':['Print','印刷'],
+'清除筛选':['Clear filters','絞り込み解除'],
+'随机一套':['Random set','ランダム選択'],
+'二维码小抄':['QR cheat sheet','QRチートシート'],
+'下载':['PDF','PDF'],
+'试卷':['Paper','問題'],
+'评分标准':['MS','採点基準'],
+'MS 码':['MS QR','MS QR'],
+'MS码':['MS QR','MS QR'],
+'考官报告':['Examiner report','試験官レポート'],
+'样卷':['Specimen','見本問題'],
+'无 MS':['No MS','MS なし'],
+'全部':['All','すべて'],
+'考季':['Session','試験回'],
+'层级':['Level','レベル'],
+'卷':['Paper','ペーパー'],
+'类型':['Type','種類'],
+'文件':['File','ファイル'],
+'操作':['Actions','操作'],
+'这份卷在库里没有对应评分标准':['No markscheme for this paper in the library','この問題の採点基準はライブラリにありません'],
+'来源 papers.xtremepape.rs · 本地离线':['Source: papers.xtremepape.rs · works offline','出典: papers.xtremepape.rs · オフライン可'],
+'扫码打开评分标准':['Scan to open markscheme','スキャンして採点基準を開く'],
+'选一个科目开始。数据来自 xtremepape.rs 的 IB 镜像（2020–2026），含试卷 + 评分标准，全 TZ、HL/SL。':['Pick a subject to start. Data from the xtremepape.rs IB mirror (2020–2026): question papers + markschemes, all time zones, HL/SL.','科目を選んでください。データは xtremepape.rs の IB ミラー（2020–2026）：問題冊子＋採点基準、全TZ、HL/SL。']
+};
+var R=[
+[/^搜索：(.*)$/,'Search: $1','検索：$1'],
+[/^(\d+) 份 · (\d+) 个考季$/,'$1 papers · $2 exam sessions','$1 件 · $2 試験回'],
+[/^显示 (\d+) 份$/,'Showing $1','$1 件を表示'],
+[/^命中 (\d+) 份（只显示前 (\d+)）$/,'$1 hits (showing first $2)','$1 件ヒット（先頭 $2 件）'],
+[/^命中 (\d+) 份$/,'$1 hits','$1 件ヒット'],
+[/^共 (\d+) 条命中。$/,'$1 results.','合計 $1 件。'],
+[/^搜索 “(.*)”$/,'Search “$1”','「$1」を検索'],
+[/^(.*) · 二维码小抄$/,'$1 · QR cheat sheet','$1 · QRチートシート'],
+[/^共 (\d+) 张（可打印）——扫每张图上的码 → 直接跳到该卷的评分标准$/,'$1 sheets (printable) — scan any code to open that paper\\\'s markscheme','$1 枚（印刷可）— どのコードをスキャンしても対応する採点基準が開きます'],
+[/^扫码打开评分标准：(.*)$/,'Scan to open markscheme: $1','スキャンして採点基準を開く：$1'],
+[/^(\d+) 份$/,'$1 papers','$1 件']
+];
+var SD={'生物':['Biology','生物学'],'化学':['Chemistry','化学'],'物理':['Physics','物理学'],'数学：分析与方法 AA':['Mathematics: Analysis & Approaches (AA)','数学：解析とアプローチ AA'],'数学：应用与解释 AI':['Mathematics: Applications & Interpretation (AI)','数学：応用と解釈 AI'],'数学（旧·Mathematics）':['Mathematics (old syllabus)','数学（旧課程）'],'数学（旧·Mathematical Studies）':['Mathematical Studies (old)','数学スタディーズ（旧課程）'],'进阶数学':['Further Mathematics','高等数学'],'经济':['Economics','経済学'],'商业管理 BM':['Business Management (BM)','ビジネスマネジメント BM'],'历史':['History','歴史'],'地理':['Geography','地理'],'心理学':['Psychology','心理学'],'哲学':['Philosophy','哲学'],'全球政治':['Global Politics','グローバル政治'],'社会文化人类学':['Social & Cultural Anthropology','社会文化人類学'],'环境系统与社会 ESS':['Environmental Systems & Societies (ESS)','環境システムと社会 ESS'],'运动、锻炼与健康科学 SEHS':['Sports, Exercise & Health Science (SEHS)','スポーツ・運動・健康科学 SEHS'],'计算机科学':['Computer Science','コンピュータサイエンス'],'设计技术':['Design Technology','デザインテクノロジー'],'数字社会':['Digital Society','デジタル社会'],'世界宗教':['World Religions','世界の宗教'],'文学与表演':['Literature & Performance','文学とパフォーマンス'],'古典希腊语':['Classical Greek','古典ギリシャ語'],'音乐':['Music','音楽']};
+var LD={'中文':['Chinese','中国語'],'英语':['English','英語'],'日语':['Japanese','日本語'],'韩语':['Korean','韓国語'],'法语':['French','フランス語'],'德语':['German','ドイツ語'],'西班牙语':['Spanish','スペイン語'],'意大利语':['Italian','イタリア語'],'葡萄牙语':['Portuguese','ポルトガル語'],'荷兰语':['Dutch','オランダ語'],'俄语':['Russian','ロシア語'],'阿拉伯语':['Arabic','アラビア語'],'希伯来语':['Hebrew','ヘブライ語'],'希腊语':['Greek','ギリシャ語'],'拉丁语':['Latin','ラテン語'],'瑞典语':['Swedish','スウェーデン語'],'挪威语':['Norwegian','ノルウェー語'],'丹麦语':['Danish','デンマーク語'],'芬兰语':['Finnish','フィンランド語'],'冰岛语':['Icelandic','アイスランド語'],'波兰语':['Polish','ポーランド語'],'捷克语':['Czech','チェコ語'],'斯洛伐克语':['Slovak','スロバキア語'],'斯洛文尼亚语':['Slovenian','スロベニア語'],'匈牙利语':['Hungarian','ハンガリー語'],'罗马尼亚语':['Romanian','ルーマニア語'],'保加利亚语':['Bulgarian','ブルガリア語'],'克罗地亚语':['Croatian','クロアチア語'],'塞尔维亚语':['Serbian','セルビア語'],'马其顿语':['Macedonian','マケドニア語'],'阿尔巴尼亚语':['Albanian','アルバニア語'],'爱沙尼亚语':['Estonian','エストニア語'],'拉脱维亚语':['Latvian','ラトビア語'],'立陶宛语':['Lithuanian','リトアニア語'],'乌克兰语':['Ukrainian','ウクライナ語'],'土耳其语':['Turkish','トルコ語'],'印地语':['Hindi','ヒンディー語'],'乌尔都语':['Urdu','ウルドゥー語'],'孟加拉语':['Bengali','ベンガル語'],'泰米尔语':['Tamil','タミル語'],'僧伽罗语':['Sinhala','シンハラ語'],'尼泊尔语':['Nepali','ネパール語'],'宗卡语':['Dzongkha','ゾンカ語'],'普什图语':['Pashto','パシュトー語'],'波斯语':['Persian','ペルシア語'],'缅甸语':['Burmese','ビルマ語'],'高棉语':['Khmer','クメール語'],'老挝语':['Lao','ラオ語'],'泰语':['Thai','タイ語'],'越南语':['Vietnamese','ベトナム語'],'马来语':['Malay','マレー語'],'印尼语':['Indonesian','インドネシア語'],'蒙古语':['Mongolian','モンゴル語'],'格鲁吉亚语':['Georgian','ジョージア語'],'阿塞拜疆语':['Azerbaijani','アゼルバイジャン語'],'阿姆哈拉语':['Amharic','アムハラ語'],'斯瓦希里语':['Swahili','スワヒリ語'],'约鲁巴语':['Yoruba','ヨルバ語'],'索马里语':['Somali','ソマリ語'],'瓜拉尼语':['Guarani','グアラニー語'],'南非荷兰语':['Afrikaans','アフリカーンス語'],'威尔士语':['Welsh','ウェールズ語'],'加泰罗尼亚语':['Catalan','カタルーニャ語'],'加利西亚语':['Galician','ガリシア語'],'马拉加斯语':['Malagasy','マダガスカル語'],'茨瓦纳语':['Setswana','ツワナ語'],'阿肯语':['Akan','アカン語'],'乌兹别克语':['Uzbek','ウズベク語'],'哈萨克语':['Kazakh','カザフ語']};
+var KD={'A':['A','A'],'B':['B','B'],'ab initio':['ab initio','ab initio'],'文学':['Literature','文学'],'语言与文学':['Language & Literature','言語と文学']};
+function subj(s){if(li===0)return s;if(SD[s])return SD[s][li-1];var m=s.match(/^(.+?)\s+(A|B|ab initio|文学|语言与文学)$/);if(m&&LD[m[1]])return LD[m[1]][li-1]+' '+KD[m[2]][li-1];if(LD[s])return LD[s][li-1];return s;}
+function x(s){var k=s.trim();if(!k||li===0)return s;var o=null;if(D[k])o=s.replace(k,D[k][li-1]);else{for(var i=0;i<R.length;i++){var m=k.match(R[i][0]);if(m){var t=R[i][li];for(var j=1;j<m.length;j++)t=t.split('$'+j).join(subj(m[j]));o=s.replace(k,t);break;}}if(o===null){var sb=subj(k);o=(sb!==k)?s.replace(k,sb):s;}}return post(o);}
+var MO={Jan:1,Feb:2,Mar:3,Apr:4,May:5,Jun:6,Jul:7,Aug:8,Sep:9,Oct:10,Nov:11,Dec:12};
+function post(o){if(li===0)return o;if(li===1)return o.replace(/科目/g,'subject');
+ return o.replace(/([A-Z][a-z]{2})[a-z]*\s(\d{4})/g,function(a,m,y){var n=MO[m];return n?(y+'年'+n+'月'):a;}).replace(/paper/gi,'ペーパー').replace(/markscheme/gi,'採点基準');}
+function walk(n){
+ if(n.nodeType===3){var t=n.nodeValue;
+  if(n.__zh===undefined){if(/[\u4e00-\u9fa5]/.test(t)||/^(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]* \d{4}$/.test(t.trim()))n.__zh=t;else return;}
+  var o=(li===0)?n.__zh:x(n.__zh);if(o!==t)n.nodeValue=o;
+  return;}
+ if(n.nodeType!==1)return;var tg=n.tagName;
+ if(tg==='SCRIPT'||tg==='STYLE')return;
+ if(tg==='INPUT'||tg==='TEXTAREA'){if(n.placeholder){if(n.__zhp===undefined)n.__zhp=n.placeholder;var p=(li===0)?n.__zhp:x(n.__zhp);if(p!==n.placeholder)n.placeholder=p;}return;}
+ for(var c=n.firstChild;c;c=c.nextSibling)walk(c);}
+function fixSub(){var sub=document.querySelector('header .sub');if(!sub)return;if(window.__tot===undefined){var b0=sub.querySelector('b');window.__tot=b0?b0.textContent.trim():'0';}var n=window.__tot;
+ sub.textContent=(li===0)?('共 '+n+' 份 · 2020–2026 · 全学科 · 全 TZ · HL·SL · 来源 papers.xtremepape.rs · 本地离线'):(li===1?(n+' papers · 2020–2026 · all subjects · all time zones · HL/SL · source: papers.xtremepape.rs · offline'):(n+' 件 · 2020–2026 · 全科目 · 全TZ · HL/SL · 出典: papers.xtremepape.rs · オフライン'));}
+function wrapTables(){var t=document.querySelectorAll('main table');for(var i=0;i<t.length;i++){var p=t[i].parentElement;if(!p||p.className.indexOf('tw')>=0)continue;var w=document.createElement('div');w.className='tw';p.insertBefore(w,t[i]);w.appendChild(t[i]);}}
+function apply(){var b=document.body;if(!b)return;walk(b);fixSub();wrapTables();document.title=(li===0)?'IB 真题库 · Past Paper Library':(li===1?'IB Past Papers · Library':'IB 過去問ライブラリ');document.documentElement.lang=(li===0)?'zh':(li===1)?'en':'ja';}
+var busy=false;
+function schedule(){if(busy)return;busy=true;setTimeout(function(){busy=false;apply();},60);}
+var lb=document.createElement('div');lb.id='langbar';
+var names=['中文','EN','日本語'];
+for(var i=0;i<3;i++){(function(i){var b=document.createElement('button');b.textContent=names[i];b.onclick=function(){li=i;try{localStorage.setItem(LS,String(i));}catch(e){}apply();paint();};lb.appendChild(b);})(i);}
+function paint(){var bs=lb.querySelectorAll('button');for(var i=0;i<bs.length;i++)bs[i].className=(i===li)?'on':'';}
+var mb=document.createElement('button');mb.id='menubtn';mb.textContent='☰';
+var sc=document.createElement('div');sc.id='scrim';
+mb.onclick=function(){var a=document.querySelector('aside');if(!a)return;a.classList.toggle('open');sc.classList.toggle('on');};
+sc.onclick=function(){var a=document.querySelector('aside');if(a)a.classList.remove('open');sc.classList.remove('on');};
+document.addEventListener('click',function(e){var a=document.querySelector('aside');if(a&&a.classList.contains('open')&&!a.contains(e.target)&&e.target!==mb&&!mb.contains(e.target)){a.classList.remove('open');sc.classList.remove('on');}},true);
+function boot(){document.body.appendChild(lb);document.body.appendChild(sc);var hd=document.querySelector('header');if(hd)hd.insertBefore(mb,hd.firstChild);else document.body.appendChild(mb);paint();apply();
+ ['open','cardView','search','buildSubs','openQrSheet','showQR'].forEach(function(fn){var f=window[fn];if(typeof f==='function'){window[fn]=function(){var r=f.apply(this,arguments);try{apply();}catch(e){}return r;};}});
+ window.ibppApply=apply;
+ document.addEventListener('click',function(e){if(!e.target||!e.target.closest)return;var a=document.querySelector('aside');if(a&&a.classList.contains('open')&&e.target.closest('#subs')){a.classList.remove('open');sc.classList.remove('on');}},true);
+ if(window.MutationObserver){new MutationObserver(function(){schedule();}).observe(document.body,{childList:true,subtree:true,characterData:true});}
+ setTimeout(apply,300);setTimeout(apply,1200);}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
+})();
+</script>
+</body>
+</html>
