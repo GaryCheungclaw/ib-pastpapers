@@ -160,9 +160,10 @@ function open(s){
     CUR=rs;
     const kName={paper:"试卷",markscheme:"评分标准",report:"考官报告",specimen:"样卷"};
     E("tbl").innerHTML = `<div class="hint">显示 ${rs.length} 份</div><table><thead><tr><th>考季</th><th>层级</th><th>卷</th><th>TZ</th><th>类型</th><th>文件</th><th></th></tr></thead><tbody>`
-      + rs.map((r,i)=>`<tr><td class="ses">${esc(r.ses)}</td><td class="hl">${esc(r.l)}</td><td>${esc(r.pp)}</td><td>${esc(r.tz)}</td><td><span class="tag ${r.k[0]}">${kName[r.k]||r.k}</span></td><td style="color:var(--mut);max-width:380px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${esc(r.n)}">${esc(r.n)}</td><td style="white-space:nowrap"><a class="dl" href="${esc(r.u)}" target="_blank" rel="noopener">下载</a> ${msFor(r)?`<button class="dl q" data-i="${i}">MS 码</button>`:`<span class="tag">无 MS</span>`}</td></tr>`).join("")
+      + rs.map((r,i)=>`<tr><td class="ses">${esc(r.ses)}</td><td class="hl">${esc(r.l)}</td><td>${esc(r.pp)}</td><td>${esc(r.tz)}</td><td><span class="tag ${r.k[0]}">${kName[r.k]||r.k}</span></td><td style="color:var(--mut);max-width:380px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${esc(r.n)}">${esc(r.n)}</td><td style="white-space:nowrap"><button class="dl v" data-i="${i}">看</button> <a class="dl" href="${esc(r.u)}" target="_blank" rel="noopener">下载</a> ${msFor(r)?`<button class="dl q" data-i="${i}">MS 码</button>`:`<span class="tag">无 MS</span>`}</td></tr>`).join("")
       + `</tbody></table>`;
     E("tbl").querySelectorAll("button.q").forEach(b=>b.onclick=()=>showQR(CUR[+b.dataset.i]));
+    E("tbl").querySelectorAll("button.v").forEach(b=>b.onclick=()=>window.openReader&&window.openReader(CUR[+b.dataset.i]));
   };
   ["f1","f2","f3","f4"].forEach(i=>E(i).onchange=draw);
   E("cl").onclick=()=>{["f1","f2","f3","f4"].forEach(i=>E(i).value="");draw();};
@@ -186,8 +187,9 @@ function search(){
   const mk=()=>kName[Object.keys(kName).find(k=>k.startsWith(hits[i].k[0]))];
   E("main").innerHTML = `<h2 style="margin:0 0 4px">搜索 “${esc(q)}”</h2><div class="hint">命中 ${hits.length} 份${hits.length>cap?`（只显示前 ${cap}）`:``}</div>
    <table><thead><tr><th>科目</th><th>考季</th><th>层级</th><th>卷</th><th>类型</th><th>文件</th><th></th></tr></thead><tbody>`
-   + hits.slice(0,cap).map((r,i)=>`<tr><td>${esc(r.s)}</td><td class="ses">${esc(r.ses)}</td><td class="hl">${esc(r.l)}</td><td>${esc(r.pp)}</td><td><span class="tag ${r.k[0]}">${r.k==='markscheme'?'评分标准':r.k==='paper'?'试卷':r.k}</span></td><td style="color:var(--mut);max-width:360px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${esc(r.n)}">${esc(r.n)}</td><td><a class="dl" href="${esc(r.u)}" target="_blank" rel="noopener">下载</a></td></tr>`).join("")
+   + hits.slice(0,cap).map((r,i)=>`<tr><td>${esc(r.s)}</td><td class="ses">${esc(r.ses)}</td><td class="hl">${esc(r.l)}</td><td>${esc(r.pp)}</td><td><span class="tag ${r.k[0]}">${r.k==='markscheme'?'评分标准':r.k==='paper'?'试卷':r.k}</span></td><td style="color:var(--mut);max-width:360px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${esc(r.n)}">${esc(r.n)}</td><td><button class="dl v" data-i="${i}">看</button> <a class="dl" href="${esc(r.u)}" target="_blank" rel="noopener">下载</a></td></tr>`).join("")
    + `</tbody></table><footer>共 ${hits.length} 条命中。</footer>`;
+  E("main").querySelectorAll("button.v").forEach(b=>b.onclick=()=>window.openReader&&window.openReader(hits[+b.dataset.i]));
 }
 E("qrclose").onclick=()=>E("qrmask").classList.remove("on");
 E("qrmask").onclick=e=>{ if(e.target.id==="qrmask") E("qrmask").classList.remove("on"); };
@@ -314,5 +316,215 @@ function boot(){document.body.appendChild(lb);document.body.appendChild(sc);var 
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
 })();
 </script>
+<!-- ===== 一号机加：内置 PDF 阅读器 + 手写批注 · 2026-10-10 ===== -->
+<style>
+.rdr{position:fixed;inset:0;background:#0b0d12;z-index:200;display:none;flex-direction:column}
+.rdr.on{display:flex}
+.rdrbar{display:flex;align-items:center;gap:6px;padding:6px 10px;background:#12161d;border-bottom:1px solid #283040;flex-wrap:wrap}
+.rdrbar .t{font-size:12px;color:#cfd8e3;max-width:28vw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rdrbar button,.rdrbar select{background:#1c232c;color:#e6edf3;border:1px solid #283040;border-radius:8px;padding:5px 9px;font-size:12px;cursor:pointer}
+.rdrbar button.on{border-color:#3b82f6;background:#20304a}
+.rdrbar .sw{width:22px;height:22px;border-radius:50%;border:2px solid #555;padding:0}
+.rdrbar .sw.on{border-color:#fff;transform:scale(1.15)}
+#rdrFlash{color:#7fd1a8;font-size:12px;opacity:0;transition:opacity .3s}
+.rdrbody{flex:1;overflow:auto;background:#15181d}
+.rdrbody.srow{display:flex;flex-direction:row;gap:8px}
+.rdrbody.srow>div{flex:1;overflow:auto;height:100%}
+#rdrPages{display:flex;flex-direction:column;align-items:center;padding:8px;min-height:100%}
+#rdrPages.row{flex-direction:row;align-items:flex-start;padding:8px;width:max-content}
+.rdrpg{position:relative;margin:10px auto;box-shadow:0 4px 20px #0008}
+.rdrpg canvas.pdf{display:block;background:#fff}
+.rdrpg canvas.ink{position:absolute;left:0;top:0;touch-action:none;cursor:crosshair}
+.rdrhint{color:#8b98a9;font-size:13px;padding:24px;text-align:center}
+.rdrhint a{color:#79b8ff}
+</style>
+<script src="vendor/pdf.min.js"></script>
+<script>/* 默认代理（原站跨域/X-Frame-Options:DENY → 靠它把 PDF 带 CORS 头取回来）。换代理：改这里，或 URL 加 ?proxy=，或 localStorage.ibpp_proxy */
+window.IBPP_PROXY='https://pennsylvania-moon-shaved-focusing.trycloudflare.com/proxy?url={url}';</script>
+<script>
+(function(){
+if(!window.pdfjsLib){console.warn('pdf.js missing');window.openReader=function(){alert('阅读器组件没加载（PDF.js）');};return;}
+pdfjsLib.GlobalWorkerOptions.workerSrc='vendor/pdf.worker.min.js';
+var COLORS=['#111111','#e4002b','#1e6fd9','#18a558'];
+var R={doc:null,url:'',name:'',ann:{},tool:'pen',color:COLORS[1],page:0,splitting:false,busy:false};
+function $(id){return document.getElementById(id);}
+function esc2(s){return (s||'').replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]});}
+function proxyFor(u){
+  var base='';
+  try{var qp=new URLSearchParams(location.search).get('proxy');base=qp||localStorage.getItem('ibpp_proxy')||'';
+    if(!base&&/^(127\.0\.0\.1|localhost)$/.test(location.hostname))base='/proxy';
+    if(!base)base=window.IBPP_PROXY||'';}catch(e){}
+  if(!base)return u;
+  return base.indexOf('{url}')>=0?base.replace('{url}',encodeURIComponent(u)):(base+(base.indexOf('?')>=0?'&':'?')+'url='+encodeURIComponent(u));
+}
+function annKey(u){return 'ibpp_ann::'+u;}
+function loadAnn(u){try{return JSON.parse(localStorage.getItem(annKey(u))||'{}')}catch(e){return{};}}
+function saveAnn(){try{localStorage.setItem(annKey(R.url),JSON.stringify(R.ann));}catch(e){}}
+function flash(t){var n=$('rdrFlash');if(!n)return;n.textContent=t;n.style.opacity=1;clearTimeout(n._t);n._t=setTimeout(function(){n.style.opacity=0;},1600);}
+async function build(doc,host,url,editable){
+  host.innerHTML='';
+  var secs=[];
+  try{var ol=await doc.getOutline();
+    if(ol){for(var i=0;i<ol.length;i++){try{var d=ol[i].dest;var ref=(typeof d==='string')?await doc.getDestination(d):d;var pi=(ref&&ref[0]!=null)?await doc.getPageIndex(ref[0]):0;secs.push({t:ol[i].title,p:pi});}catch(e){}}}
+  }catch(e){}
+  if(editable){
+    $('rdrSec').innerHTML=secs.length?secs.map(function(s,i){return '<option value="'+s.p+'">'+(i+1)+'. '+esc2(s.t)+'</option>';}).join('')
+      :Array.from({length:doc.numPages},function(_,i){return '<option value="'+i+'">第 '+(i+1)+' 页</option>';}).join('');
+    $('rdrSec').onchange=function(){var p=+this.value;var el=$('rdrPages').querySelector('[data-p="'+p+'"]');if(el)el.scrollIntoView({block:'start'});};
+  }
+  for(var n=1;n<=doc.numPages;n++){(function(n){
+    var wrap=document.createElement('div');wrap.className='rdrpg';wrap.dataset.p=n-1;
+    var c=document.createElement('canvas');c.className='pdf';wrap.appendChild(c);host.appendChild(wrap);
+    doc.getPage(n).then(function(pg){
+      var vp1=pg.getViewport({scale:1});
+      var sc=Math.min(Math.min(window.innerWidth-40,1100)/vp1.width,2);
+      var vp=pg.getViewport({scale:sc});
+      c.width=vp.width;c.height=vp.height;c.style.width=vp.width+'px';c.style.height=vp.height+'px';
+      pg.render({canvasContext:c.getContext('2d'),viewport:vp});
+      if(editable){var ink=document.createElement('canvas');ink.className='ink';ink.width=vp.width;ink.height=vp.height;ink.style.width=vp.width+'px';ink.style.height=vp.height+'px';wrap.appendChild(ink);wireInk(ink,R.url,n-1);}
+    });
+  })(n);}
+}
+function wireInk(cv,url,pg){
+  var ctx=cv.getContext('2d');
+  function redraw(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    var arr=R.ann[pg]||[];
+    for(var i=0;i<arr.length;i++){var s=arr[i];if(!s.p||s.p.length<2)continue;
+      ctx.strokeStyle=s.c;ctx.lineWidth=Math.max(2.5,s.w*cv.width/1000);ctx.lineCap='round';ctx.lineJoin='round';
+      ctx.beginPath();ctx.moveTo(s.p[0][0]*cv.width,s.p[0][1]*cv.height);
+      for(var j=1;j<s.p.length;j++)ctx.lineTo(s.p[j][0]*cv.width,s.p[j][1]*cv.height);
+      ctx.stroke();}
+  }
+  cv.redraw=redraw;redraw();
+  var cur=null;
+  function pos(e){var r=cv.getBoundingClientRect();return [(e.clientX-r.left)/r.width,(e.clientY-r.top)/r.height];}
+  cv.addEventListener('pointerdown',function(e){
+    if(R.tool==='eraser'){eraseAt(pg,pos(e),cv);return;}
+    try{cv.setPointerCapture(e.pointerId);}catch(x){}
+    cur={c:R.color,w:2.5,p:[pos(e)]};(R.ann[pg]||(R.ann[pg]=[])).push(cur);
+  });
+  cv.addEventListener('pointermove',function(e){
+    if(R.tool==='eraser'&&(e.buttons||e.pointerType==='touch')){eraseAt(pg,pos(e),cv);return;}
+    if(!cur)return;cur.p.push(pos(e));redraw();
+  });
+  function up(){if(cur){cur=null;saveAnn();}}
+  cv.addEventListener('pointerup',up);cv.addEventListener('pointercancel',up);cv.addEventListener('pointerleave',up);
+}
+function eraseAt(pg,pt,cv){
+  var arr=R.ann[pg];if(!arr)return;var hit=false;
+  for(var i=arr.length-1;i>=0;i--){var s=arr[i];
+    for(var j=0;j<s.p.length;j++){var dx=(s.p[j][0]-pt[0])*cv.width,dy=(s.p[j][1]-pt[1])*cv.height;
+      if(dx*dx+dy*dy<80){arr.splice(i,1);hit=true;break;}}}
+  if(hit){cv.redraw();saveAnn();}
+}
+function undo(){
+  var pg=curPage();var arr=R.ann[pg]||[];if(arr.length){arr.pop();saveAnn();repaint(pg);flash('撤销 ✓');}
+}
+function curPage(){
+  var host=$('rdrPages');var best=0,bd=1e9;
+  host.querySelectorAll('.rdrpg').forEach(function(el){var d=Math.abs(el.getBoundingClientRect().top);if(d<bd){bd=d;best=+el.dataset.p;}});
+  return best;
+}
+function repaint(pg){$('rdrPages').querySelectorAll('.rdrpg').forEach(function(w){if(+w.dataset.p===pg){var cv=w.querySelector('canvas.ink');if(cv&&cv.redraw)cv.redraw();}});}
+function clearPage(){var pg=curPage();if(R.ann[pg]&&R.ann[pg].length&&confirm('清掉本页批注？')){R.ann[pg]=[];saveAnn();repaint(pg);}}
+async function openReader(r){
+  if(R.busy||!r)return;R.busy=true;
+  $('rdr').classList.add('on');document.body.style.overflow='hidden';
+  $('rdrTitle').textContent=r.s+' · '+r.ses+' · '+[r.l,r.pp,r.tz].filter(Boolean).join(' ');
+  var body=$('rdrBody');body.classList.remove('srow');$('rdrMSwrap').style.display='none';
+  $('rdrPages').classList.remove('row');$('rdrMS').innerHTML='';
+  $('rdrPages').innerHTML='<div class="rdrhint">正在加载 PDF…<br><span style="font-size:11px">若一直不动，点右上「新标签」直接打开</span></div>';
+  R.url=r.u;R.name=r.n||'';R.ann=loadAnn(r.u);R.splitting=false;
+  var ms=window.msFor?window.msFor(r):null;
+  window.__rdrMSurl=ms?ms.u:null;
+  $('rdrSplit').style.display=ms?'inline-block':'none';
+  $('rdrSplit').classList.remove('on');
+  try{R.doc=await pdfjsLib.getDocument({url:proxyFor(r.u)}).promise;}
+  catch(e){
+    $('rdrPages').innerHTML='<div class="rdrhint">打不开——被原站跨域挡了。<br><br>'
+      +'<a href="'+esc2(proxyFor(r.u))+'">① 新标签打开</a> &nbsp; <a href="'+esc2(r.u)+'">② 原站直开</a><br><br>'
+      +'<span style="font-size:11px;color:#66717f">原因：papers.xtremepape.rs 设了 X-Frame-Options:DENY、又不给 CORS，网页里读不到它的 PDF，需要一个代理（见 README「在线阅读」）。</span></div>';
+    R.busy=false;return;
+  }
+  await build(R.doc,$('rdrPages'),R.url,true);
+  R.busy=false;
+}
+window.openReader=openReader;
+function closeReader(){if(document.fullscreenElement)document.exitFullscreen();$('rdr').classList.remove('on');document.body.style.overflow='';}
+function boot(){
+  $('rdrX').onclick=closeReader;
+  $('rdrOpen').onclick=function(){window.open(proxyFor(R.url),'_blank');};
+  $('rdrSave').onclick=saveAnn;
+  $('rdrExport').onclick=function(){var b=new Blob([JSON.stringify(R.ann)],{type:'application/json'});var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=(R.name||'annotations')+'.json';a.click();flash('已导出 JSON');};
+  $('rdrImportBtn').onclick=function(){$('rdrImport').click();};
+  $('rdrImport').onchange=function(){var f=this.files[0];if(!f)return;var fr=new FileReader();fr.onload=function(){try{R.ann=JSON.parse(fr.result);saveAnn();$('rdrPages').querySelectorAll('canvas.ink').forEach(function(c){c.redraw&&c.redraw();});flash('已导入');}catch(e){alert('格式不对');}};fr.readAsText(f);};
+  $('rdrCloud').onclick=function(){alert('云同步（用 Google 账号存批注）需要先配一个 Google OAuth Client ID；国内网络 Google 还被墙。\n现在批注存在本机浏览器（localStorage），可以「导出 JSON」自己备份/换设备导入。');};
+  document.querySelectorAll('#rdrTools button[data-tool]').forEach(function(b){b.onclick=function(){R.tool=b.dataset.tool;document.querySelectorAll('#rdrTools button[data-tool]').forEach(function(x){x.classList.toggle('on',x===b);});};});
+  document.querySelectorAll('#rdrTools .sw').forEach(function(b){b.onclick=function(){R.color=b.dataset.c;document.querySelectorAll('#rdrTools .sw').forEach(function(x){x.classList.toggle('on',x===b);});};});
+  $('rdrTools').querySelector('button[data-tool="pen"]').classList.add('on');
+  document.querySelector('#rdrTools .sw[data-c="'+COLORS[1]+'"]').classList.add('on');
+  $('rdrUndo').onclick=undo;$('rdrClear').onclick=clearPage;
+  $('rdrFS').onclick=function(){
+    if(document.fullscreenElement){document.exitFullscreen();}
+    else{$('rdr').requestFullscreen&&$('rdr').requestFullscreen();}
+  };
+  document.addEventListener('fullscreenchange',function(){$('rdrPages').classList.toggle('row',!!document.fullscreenElement);$('rdrFS').classList.toggle('on',!!document.fullscreenElement);});
+  $('rdrSplit').onclick=async function(){
+    var r={u:R.url};var msAll=null;
+    // find current row's ms url via a global lookup set by openReader's caller
+    msAll=window.__rdrMSurl;
+    if(!msAll)return;
+    var body=$('rdrBody');
+    if(body.classList.contains('srow')){body.classList.remove('srow');$('rdrMSwrap').style.display='none';this.classList.remove('on');$('rdrPages').classList.remove('row');return;}
+    $('rdrMSwrap').style.display='block';body.classList.add('srow');this.classList.add('on');
+    $('rdrPages').classList.add('row');
+    if(!R.msDoc){try{R.msDoc=await pdfjsLib.getDocument({url:proxyFor(msAll)}).promise;}catch(e){$('rdrMS').innerHTML='<div class="rdrhint">评分标准加载失败</div>';return;}}
+    await build(R.msDoc,$('rdrMS'),msAll,false);
+  };
+  document.addEventListener('keydown',function(e){
+    if(!$('rdr').classList.contains('on'))return;
+    var t=e.target.tagName;if(t==='INPUT'||t==='TEXTAREA'||t==='SELECT')return;
+    var k=e.key.toLowerCase();
+    if(k==='p'){R.tool='pen';document.querySelectorAll('#rdrTools button[data-tool]').forEach(function(x){x.classList.toggle('on',x.dataset.tool==='pen');});}
+    else if(k==='e'){R.tool='eraser';document.querySelectorAll('#rdrTools button[data-tool]').forEach(function(x){x.classList.toggle('on',x.dataset.tool==='eraser');});}
+    else if(k==='u'||(k==='z'&&(e.metaKey||e.ctrlKey))){undo();e.preventDefault();}
+    else if('1234'.indexOf(k)>=0){R.color=COLORS[+k-1];document.querySelectorAll('#rdrTools .sw').forEach(function(x){x.classList.toggle('on',x.dataset.c===R.color);});}
+    else if(k==='escape'){if(!document.fullscreenElement)closeReader();}
+  });
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
+})();
+</script>
+<div id="rdr" class="rdr">
+  <div class="rdrbar">
+    <span class="t" id="rdrTitle">阅读器</span>
+    <select id="rdrSec" title="大题 / 书目跳转"></select>
+    <button id="rdrFS">⛶ 全屏(横向)</button>
+    <button id="rdrSplit">答案并排</button>
+    <span id="rdrTools" style="display:flex;gap:4px;align-items:center">
+      <button data-tool="pen" title="笔 (P)">✏️</button>
+      <button data-tool="eraser" title="橡皮 (E)">🧽</button>
+      <button id="rdrUndo" title="撤销 (U / ⌘Z)">↶</button>
+      <button id="rdrClear" title="清本页">🗑</button>
+      <button class="sw" data-c="#111111" title="黑 (4)"></button>
+      <button class="sw" data-c="#e4002b" title="红 (2)"></button>
+      <button class="sw" data-c="#1e6fd9" title="蓝 (3)"></button>
+      <button class="sw" data-c="#18a558" title="绿 (4)"></button>
+    </span>
+    <button id="rdrSave">保存批注</button>
+    <button id="rdrExport">导出</button>
+    <button id="rdrImportBtn">导入</button>
+    <input id="rdrImport" type="file" accept="application/json" style="display:none">
+    <button id="rdrCloud" title="Google 登录存批注">☁ 云同步</button>
+    <button id="rdrOpen">↗ 新标签</button>
+    <span id="rdrFlash"></span>
+    <button id="rdrX" style="margin-left:auto">✕</button>
+  </div>
+  <div id="rdrBody" class="rdrbody">
+    <div id="rdrPages"></div>
+    <div id="rdrMSwrap" style="display:none"><div id="rdrMS"></div></div>
+  </div>
+</div>
 </body>
 </html>
